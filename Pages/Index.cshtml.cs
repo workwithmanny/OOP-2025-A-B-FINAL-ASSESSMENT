@@ -1,19 +1,43 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using RazorPagesMovie.Data;
+using RazorPagesMovie.Models;
 
 namespace RazorPagesMovie.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
+    private readonly RazorPagesMovieContext _context;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(RazorPagesMovieContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    public void OnGet()
-    {
+    public int MovieCount { get; set; }
+    public int ActorCount { get; set; }
+    public decimal AverageRating { get; set; }
+    public IList<Movie> FeaturedMovies { get; set; } = new List<Movie>();
 
+    public async Task OnGetAsync()
+    {
+        MovieCount = await _context.Movie.CountAsync();
+        ActorCount = await _context.Actor.CountAsync();
+
+        if (MovieCount > 0)
+        {
+            AverageRating = await _context.Movie.AverageAsync(movie => movie.ImdbRating);
+        }
+
+        var movies = await _context.Movie
+            .Include(movie => movie.MovieActors)
+            .ThenInclude(movieActor => movieActor.Actor)
+            .ToListAsync();
+
+        FeaturedMovies = movies
+            .OrderByDescending(movie => movie.ImdbRating)
+            .ThenBy(movie => movie.Title)
+            .Take(3)
+            .ToList();
     }
 }

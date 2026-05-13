@@ -2,85 +2,66 @@
 @model RazorPagesMovie.Pages.Movies.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Movies";
 }
 
-<h1>Index</h1>
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">Movie catalogue</p>
+        <h1>Movies</h1>
+        <p class="lead">Search title, genre, director, or release country from one field.</p>
+    </div>
+    <div class="header-actions">
+        <a class="btn btn-primary" asp-page="Create">Add Movie</a>
+    </div>
+</section>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<form>
-    <p>
-        Search:
-        <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-        <a asp-page="./Index">Clear</a>
-    </p>
+<form class="toolbar" method="get">
+    <div class="search-box">
+        <label asp-for="SearchString">Search movies</label>
+        <input type="search" asp-for="SearchString" class="form-control" placeholder="Try Nolan, Nigeria, Action, or Ty" />
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a class="btn btn-outline-secondary" asp-page="./Index">Clear</a>
 </form>
-<table class="table">
-    <thead>
+
+<div class="table-responsive table-panel">
+    <table class="table align-middle">
+        <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].ReleaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Director)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].ReleaseCountry)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].ImdbRating)
-            </th>
-            <th>
-                Actors
-            </th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].Title)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].Genre)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].Price)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].Director)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].ReleaseCountry)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].ImdbRating)</th>
+            <th>@Html.DisplayNameFor(model => model.Movie[0].BoxOfficeRevenue)</th>
+            <th>Actors</th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Movie) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Director)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseCountry)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImdbRating)
-            </td>
-            <td>
-                @string.Join(", ", item.MovieActors.Select(movieActor => movieActor.Actor.Name))
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Movie)
+        {
+            <tr>
+                <td>
+                    <strong>@item.Title</strong>
+                    <div class="text-muted small">@item.ReleaseDate.ToString("yyyy")</div>
+                </td>
+                <td><span class="badge text-bg-light">@item.Genre</span></td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.Director</td>
+                <td>@item.ReleaseCountry</td>
+                <td><strong>@item.ImdbRating.ToString("0.0")</strong></td>
+                <td>@item.BoxOfficeRevenue.ToString("C0")</td>
+                <td>@string.Join(", ", item.MovieActors.Select(movieActor => movieActor.Actor.Name))</td>
+                <td class="action-links">
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

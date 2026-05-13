@@ -1,10 +1,99 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Movie library</p>
+        <h1>Manage movies, actors, ratings, and releases.</h1>
+        <p class="lead">Use the movie list to search by title, genre, director, or release country. Add actors first, then attach them to movies from the create and edit screens.</p>
+    </div>
+    <div class="header-actions">
+        <a class="btn btn-primary" asp-page="/Movies/Index">Browse Movies</a>
+        <a class="btn btn-outline-secondary" asp-page="/Actors/Index">Manage Actors</a>
+    </div>
+</section>
+
+<section class="stats-grid" aria-label="Movie library summary">
+    <article class="stat-card">
+        <span>Movies</span>
+        <strong>@Model.MovieCount</strong>
+    </article>
+    <article class="stat-card">
+        <span>Actors</span>
+        <strong>@Model.ActorCount</strong>
+    </article>
+    <article class="stat-card">
+        <span>Average IMDb</span>
+        <strong>@Model.AverageRating.ToString("0.0")</strong>
+    </article>
+</section>
+
+<section class="content-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Top rated</p>
+            <h2>Featured movies</h2>
+        </div>
+        <a asp-page="/Movies/Create">Add Movie</a>
+    </div>
+
+    @if (Model.FeaturedMovies.Any())
+    {
+        <div class="movie-card-grid">
+            @foreach (var movie in Model.FeaturedMovies)
+            {
+                <article class="movie-card">
+                    <div class="movie-card-topline">
+                        <span>@movie.Genre</span>
+                        <strong>@movie.ImdbRating.ToString("0.0") IMDb</strong>
+                    </div>
+                    <h3>@movie.Title</h3>
+                    <p>@movie.Director</p>
+                    <dl>
+                        <div>
+                            <dt>Country</dt>
+                            <dd>@movie.ReleaseCountry</dd>
+                        </div>
+                        <div>
+                            <dt>Released</dt>
+                            <dd>@movie.ReleaseDate.ToString("yyyy")</dd>
+                        </div>
+                    </dl>
+                    <p class="movie-card-cast">
+                        @string.Join(", ", movie.MovieActors.Select(movieActor => movieActor.Actor.Name))
+                    </p>
+                    <a asp-page="/Movies/Details" asp-route-id="@movie.Id">View details</a>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h2>No movies yet</h2>
+            <p>Add your first movie to start building the library.</p>
+            <a class="btn btn-primary" asp-page="/Movies/Create">Add Movie</a>
+        </div>
+    }
+</section>
+
+<section class="content-section two-column">
+    <div>
+        <p class="eyebrow">Assignment checklist</p>
+        <h2>Implemented features</h2>
+        <ul class="check-list">
+            <li>Movie model includes director, cast, IMDb rating, box office revenue, and release country.</li>
+            <li>Search checks title, genre, director, and release country.</li>
+            <li>Actors have CRUD pages and can be selected when creating or editing movies.</li>
+            <li>The API endpoint is available at <code>/api/movies</code>.</li>
+        </ul>
+    </div>
+    <div class="quick-links">
+        <a asp-page="/Movies/Index">Movie table</a>
+        <a asp-page="/Actors/Index">Actor table</a>
+        <a href="/api/movies">Movies API</a>
+    </div>
+</section>

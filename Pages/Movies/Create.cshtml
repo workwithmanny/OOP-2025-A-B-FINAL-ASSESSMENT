@@ -1,18 +1,22 @@
 @page
 @model RazorPagesMovie.Pages.Movies.CreateModel
 
-        @{
-        ViewData["Title"] = "Create";
-        }
-        
-        <h1>Create</h1>
-        
-    <h4>Movie</h4>
-    <hr />
-    <div class="row">
-    <div class="col-md-4">
+@{
+    ViewData["Title"] = "Add Movie";
+}
+
+<section class="page-header compact">
+    <div>
+        <p class="eyebrow">Movie catalogue</p>
+        <h1>Add movie</h1>
+        <p class="lead">Enter movie details and select one or more actors.</p>
+    </div>
+</section>
+
+<div class="form-panel">
     <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-grid">
             <div class="form-group">
                 <label asp-for="Movie.Title" class="control-label"></label>
                 <input asp-for="Movie.Title" class="form-control" />
@@ -62,15 +66,12 @@
                 <label asp-for="SelectedActorIds" class="control-label">Actors</label>
                 <select asp-for="SelectedActorIds" asp-items="Model.ActorOptions" class="form-control" multiple></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a class="btn btn-outline-secondary" asp-page="Index">Back to List</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
